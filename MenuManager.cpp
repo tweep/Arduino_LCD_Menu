@@ -23,17 +23,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 #include "MenuManager.h"
 #include "MenuEntry.h"
 
-MenuManager::MenuManager(MenuLCD* pMenuLCD)
-: m_pMenuLCD( pMenuLCD),
-  m_fDoingIntInput( false )
-{
-}
+MenuManager::MenuManager(MenuLCD* pMenuLCD): m_pMenuLCD( pMenuLCD),  m_fDoingIntInput( false ){}
 
 // new Constructor which allows us to define in class if we want actions being executed 
 // on menus which have a child - or not. 
-MenuManager::MenuManager(MenuLCD* pMenuLCD, bool execRootAction ): m_pMenuLCD( pMenuLCD),  m_fDoingIntInput( false ) {
-  m_execRootMenuAction = execRootAction ;
-}
+MenuManager::MenuManager(MenuLCD* pMenuLCD, bool pexecRootAction ): 
+ m_pMenuLCD( pMenuLCD), 
+ m_execRootMenuAction (pexecRootAction),
+ m_fDoingIntInput( false ) { }
 
 
 
@@ -67,7 +64,7 @@ void MenuManager::WipeMenu( MenuLCD::Direction dir )
     for( int i = 0; i < m_pMenuLCD->getCharacters(); ++i )
     { 
       m_pMenuLCD->getLCD()->scrollDisplayLeft();
-      delay(75);
+      delay(10);
     }
   }
   else
@@ -75,7 +72,7 @@ void MenuManager::WipeMenu( MenuLCD::Direction dir )
     for( int i = 0; i < m_pMenuLCD->getCharacters(); ++i )
     {
       m_pMenuLCD->getLCD()->scrollDisplayRight();
-      delay(75);
+      delay(10);
     }
   }
 }
@@ -108,25 +105,29 @@ void MenuManager::DoMenuAction( MENU_ACTION action )
   if( m_fDoingIntInput == true )
   {
     int iNewNum = m_pMenuIntHelper->getInt();
+        
     char buff[64];
     switch (action )
     {
       case MENU_ACTION_UP:
-        iNewNum = m_pMenuIntHelper->numDecrease();
-        itoa( iNewNum, buff, 10 );
-        DrawInputRow( buff );
-        *m_pInt = iNewNum;
-        break;
-      case MENU_ACTION_DOWN:
         iNewNum = m_pMenuIntHelper->numIncrease();
         itoa( iNewNum, buff, 10 );
         DrawInputRow( buff );
         *m_pInt = iNewNum;
         break;
+        
+      case MENU_ACTION_DOWN:
+        iNewNum = m_pMenuIntHelper->numDecrease();
+        itoa( iNewNum, buff, 10 );
+        DrawInputRow( buff );
+        *m_pInt = iNewNum; 
+        break;
+        
       case MENU_ACTION_SELECT:
         m_fDoingIntInput = false;
         DrawMenu();
         break;
+        
       case MENU_ACTION_BACK:
         m_fDoingIntInput = false;
         DrawMenu();
@@ -237,12 +238,16 @@ void MenuManager::DrawInputRow( char *pString )
   m_pMenuLCD->PrintLineRight( pString, m_pMenuLCD->getLines() - 1 );
 }
 
+
 void MenuManager::DoIntInput( int iMin, int iMax, int iStart, int iSteps, char **label, int iLabelLines, int *pInt )
-{
+{ 
+
   char buff[64];
   m_fDoingIntInput = true;
+  
   m_pInt = pInt;
   *pInt = iStart;
+  
   //The MenuIntHelper class will keep track of the input, but all other logic will stay here
   if( m_pMenuIntHelper != NULL )
   {
@@ -253,6 +258,6 @@ void MenuManager::DoIntInput( int iMin, int iMax, int iStart, int iSteps, char *
   m_pMenuLCD->PrintMenu( label, iLabelLines, -1 );
   m_iIntLine = iLabelLines;  //Off by one because index is zero based
   itoa( m_pMenuIntHelper->getInt(), buff, 10 );  
-  DrawInputRow( buff );
+    DrawInputRow( buff );
 }
 

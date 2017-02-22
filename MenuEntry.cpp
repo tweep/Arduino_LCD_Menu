@@ -111,6 +111,12 @@ void MenuEntry_BoolFalseCallbackFunc( char * pMenuText, void * pUserData )
   *((unsigned int *)pUserData) = false;
 }
 
+//void MenuEntry_BoolToggleCallbackFunc( char * pMenuText, void * pUserData )
+//{
+//  *((unsigned int *)pUserData) =  !*((unsigned int *)pUserData) ;
+//}
+
+
 void MenuEntry_BackCallbackFunc( char * pMenuText, void * pUserData )
 {
   ((MenuManager *)pUserData)->DoMenuAction( MENU_ACTION_BACK );

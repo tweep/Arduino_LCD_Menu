@@ -21,9 +21,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 #include "MenuIntHelper.h"
 
 MenuIntHelper::MenuIntHelper( int iMin, int iMax, int iStart, int iStep ):
-m_min( iMin), m_max( iMax ), m_curNum( iStart ), m_step( iStep)
-{
-}
+m_min( iMin), 
+m_max( iMax ), 
+m_curNum( iStart ), 
+m_step( iStep) {}
+
 int MenuIntHelper::numIncrease()
 {
   //This function may have bugs when m_max is near the MAXINT limit 
@@ -34,14 +36,17 @@ int MenuIntHelper::numIncrease()
   }
   return m_curNum;
 }
+
 int MenuIntHelper::numDecrease()
 {
+
   if( m_curNum - m_step >= m_min )
   {
     m_curNum -= m_step;
   }  
   return m_curNum;
 }
+
 int MenuIntHelper::getInt()
 {
   return m_curNum;  
