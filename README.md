@@ -48,14 +48,15 @@ In your 'void setup()' Code section add the following to initialize the LCD.
 In order for the Nodes to perform some task. It will need instructions on what to do.
 We do this by setting up a callback function. It is the function that we want to call when the node is selected.
 
-void helloCallback( char* menuText, void *userData)
-{
-	lcdController.printMenu("Hello", 0);// "Hello" is the string to print, 0 is the Row
-}
-void worldCallback( char* menuText, void *userData)
-{
-	lcdController.printMenu("World", 1);// print on the bottom row
-}
+    void helloCallback( char* menuText, void *userData)
+    {
+	    lcdController.printMenu("Hello", 0);// "Hello" is the string to print, 0 is the Row
+    }
+
+    void worldCallback( char* menuText, void *userData)
+    {
+	    lcdController.printMenu("World", 1);// print on the bottom row
+    }
 
 Now that we have our callbacks, lets start creating the Menu options starting with the root node. Order matters with the library it uses a depth-first traversal order.
 
