@@ -33,13 +33,15 @@ This getting started and example expects the use of a 16x2 LCD display.
     MenuManager menuController( &lcdController); 	
 	
 Now it is time to setup your menu. This is where it is helpful to write out your tree before you begin.
-For this example we will be using the following Tree. It is a simple tree that will print "Hello" if you select the Node, and similarly for "World"
+For this example we will be using the following Tree. It is a simple tree that will print "M#-S#" if you select the Node where M# refers to the Main Node, and S# is for the subnode.
 
-    RootNode
+    M1Node
 	 |
-	 |----HelloNode (prints "Hello")
+	 |----M1-S1Node (prints "M1-S1 Callback", delay 5s)
 	 |
-	 |----WorldNode (prints "World")
+	 |----M1-S2Node (prints "M1-S2 Callback", delay 5s)
+	 |
+	M2Node (prints "M2 Callback", delay 5s)
 	  
 In your 'void setup()' Code section add the following to initialize the LCD.
 
@@ -48,27 +50,42 @@ In your 'void setup()' Code section add the following to initialize the LCD.
 In order for the Nodes to perform some task. It will need instructions on what to do.
 We do this by setting up a callback function. It is the function that we want to call when the node is selected.
 
-    void helloCallback( char* menuText, void *userData)
+    void M1S1Callback( char* menuText, void *userData)
     {
-	    lcdController.printMenu("Hello", 0);// "Hello" is the string to print, 0 is the Row
+		char *menuLines[2] = {"M1-S1 Callback", "" };
+		lcdController.PrintMenu(menuLines, 2, 3);// PrintMenu( char ** MenuString, int number of Lines, SelectedLine)
+		delay(5000);
     }
 
-    void worldCallback( char* menuText, void *userData)
-    {
-	    lcdController.printMenu("World", 1);// print on the bottom row
-    }
+    void M1S2Callback( char* menuText, void *userData)
+	{
+	  char *menuLines[2] = {"M1-S2 Callback", "" };
+	  lcdController.PrintMenu(menuLines, 2, 3);// "Hello" is the string to print, 0 is the Row
+	  delay(5000);
+	}
+
+	void M2Callback( char* menuText, void *userData)
+	{
+	  char *menuLines[2] = {"M2 Callback", "" };
+	  lcdController.PrintMenu(menuLines, 2, 3);
+	  delay(5000);
+	}
 
 Now that we have our callbacks, lets start creating the Menu options starting with the root node. Order matters with the library it uses a depth-first traversal order.
 
     // Define the objects 
-    MenuEntry * rootMenuEntry = new MenuEntry("RootNode", NULL, NULL);
-    MenuEntry * helloMenuEntry = new MenuEntry("RootNode Hello", NULL, helloCallback);
-    MenuEntry * worldMenuEntry = new MenuEntry("RootNode World", NULL, worldCallback);
+	MenuEntry * rootMenuEntry = new MenuEntry("M1", NULL, NULL);
+	MenuEntry * M1S1MenuEntry = new MenuEntry("M1-S1", NULL, M1S1Callback);
+	MenuEntry * M1S2MenuEntry = new MenuEntry("M1-S2", NULL, M1S2Callback);
+	MenuEntry * M2MenuEntry = new MenuEntry("M2", NULL, M2Callback);
+
 
 	//Add the root node
-    menuController.addMenuRoot(rootMenuEntry);
-    menuController.addChild(helloMenuEntry);	
-    menuController.addChild(worldMenuEntry);	
+	menuController.addMenuRoot(rootMenuEntry);
+    menuController.addChild(M1S1MenuEntry);    
+    menuController.addChild(M1S2MenuEntry);  
+    menuController.addSibling(M2MenuEntry);
+
 	 
 It is important to make sure that the menu is in the root starting location when you finish setting up.
 
@@ -79,7 +96,7 @@ To draw the Menu
     menuController.DrawMenu();	 
 	
 After the 'setup' and once you are in the 'loop' folder. You will need to manage whether to go 'UP', 'DOWN', 'SELECT', or 'BACK'.
-Here is an example of all 4 options.
+Here is an example of all 4 options. Note: in the example2.ino the actions are triggered by button presses.
 
      menuController.DoMenuAction( MENU_ACTION_UP);
      menuController.DoMenuAction( MENU_ACTION_DOWN);
@@ -87,12 +104,12 @@ Here is an example of all 4 options.
      menuController.DoMenuAction( MENU_ACTION_BACK);
 
 Whether these actions are tied to a button, or serial input, or something else, It is up to you.
-In order to run the 'helloCallback' run the following.
+In order to run the 'M1-S1Callback' run the following.
 
     menuController.DoMenuAction( MENU_ACTION_SELECT);
-    menuController.DoMenuAction( MENU_ACTION_SELECT);//prints 'Hello'
+    menuController.DoMenuAction( MENU_ACTION_SELECT);
 
-For full implementation of Hello Menu World see Example1.ino(todo link to example).
+For full implementation of Hello Menu World see Example2.ino(todo link to example).
 
 In order to create Mutliple root level options here is how.
 
